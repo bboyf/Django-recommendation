@@ -1,3 +1,5 @@
+import findspark
+findspark.init()
 from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
 from pyspark.mllib.recommendation import ALS
@@ -10,7 +12,7 @@ def train():
     sc = SparkContext(appName='recommend')
     sql_content = SQLContext(sc)
     read = sql_content.read
-    df = read.schema('user_id Int, book_id Int, hit_num Int').csv(path='./data/hit.csv')
+    df = read.schema('user_id Int, book_id Int, hit_num Int').csv(path=r'D:\文件夹张鑫1\spark\课程设计spark\djangoFilm\recommend\data\hit.csv')
     df.registerTempTable('hit')
     sqlContext = SparkSession.builder.getOrCreate()
     data = sqlContext.sql('select user_id,book_id,sum(hit_num) as hits from hit group by user_id, book_id')

@@ -13,11 +13,12 @@
         <div class="content row">
             <div class="img col-md-4">
                 <a href="{{ bk.url }}">
-                    <img src="{% if  'default.png' in bk.cover  %}
+                    <img src="{% if 'img/default.png' in bk.cover  %}
                     {{ bk.cover }}
                     {% else %}
-                    {% static 'img/loading.gif' %}
+                    {% static 'img/default.png' %}
                     {% endif %}" alt="封面" class="img-thumbnail">
+                     <!-- {% static 'img/loading.gif' %} -->
                 </a>
             </div>
             <div class="info col-md-8">

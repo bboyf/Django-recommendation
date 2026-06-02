@@ -14,7 +14,7 @@
             {% for foo in page %}
                 <div class="col-sm-6 col-md-3">
                     <div class="thumbnail">
-                        <a href="{% url  'getbookinfo' id=foo.id %}"><img src="{{ foo.cover }}" alt="图书封面"></a>
+                        <a href="{% url  'getbookinfo' id=foo.id %}"><img src="http://127.0.0.1:8000/{{ foo.cover }}" alt="图书封面"></a>
                         <div class="caption">
                             <a href="{% url  'getbookinfo' id=foo.id %}"><h3 class="book_name">{{ foo.name }}</h3>
                             </a>

@@ -10,6 +10,8 @@ import threading
 from django.db.models import Q
 
 
+
+# 此处上传一次即可
 # 将上传的文件保存到本地
 def handle_upload_file(name, file):
     """
@@ -60,10 +62,7 @@ def importBookData(request):
             if not file:
                 return HttpResponse('None File uploads ! ')
             else:
-
                 name = file.name
-                # name GoodBooks.csv file type <class 'django.core.files.uploadedfile.TemporaryUploadedFile'>
-                # print('name',name, 'file type', type(file))
                 handle_upload_file(name, file)
                 return HttpResponse('success')
         return render(request, 'upload.html')
@@ -126,9 +125,9 @@ def index(request):
     """
     if request.method == "GET":
         book_list = book.objects.order_by('rating').all()
-        data = split_page(book_list, request)
+        page = split_page(book_list, request)
         # locals()将所有变量传到templates
-        return render(request, 'index.html', data)
+        return render(request, 'index.html', page)
 
 
 # 启动预测推荐
@@ -139,7 +138,7 @@ def run_recommend(userid, rec_num=4):
 
 # 用户登录
 def login(request):
-    if request.is_ajax():
+    if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         userEntry = user.objects.filter(email=email, password=password)
@@ -147,12 +146,9 @@ def login(request):
             request.session['name'] = userEntry[0].name
             request.session['userid'] = userEntry[0].id
             data = {'code': 1}
-
             # 登录成功后，启用后台线程进行训练、预测
             t = threading.Thread(target=run_recommend, args=(userEntry[0].id, ), daemon=True)
             t.start()
-
-
         else:
             data = {'code': 0}
         return JsonResponse(data)
@@ -216,11 +212,13 @@ def getBookInfo(request, id):
             hit.save()
         # user_id, book_id, hit_num
         data = str(currentuser.id) + ',' + str(id) + ',' + str(1)
+        # 下方数据为获取点击的行为
         data2 = [str(currentuser.id), str(id), str(1)]
         print(data2)
-        with open(r'/home/caisi/PycharmProjects/djangoFilm/recommend/data/hit.csv', 'a') as f:
+        with open(r'recommend/data/hit.csv', 'a') as f:
             r = csv.writer(f)
             r.writerow(data2)
+            # 将点击的次数加载进入hit.csv文件中方便下次进行模型的训练
         return render(request, 'detail.html', locals())
     else:
         return redirect('login')

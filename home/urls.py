@@ -4,7 +4,6 @@ from home import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-
     path('upload/', views.importBookData, name='importBookData'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
